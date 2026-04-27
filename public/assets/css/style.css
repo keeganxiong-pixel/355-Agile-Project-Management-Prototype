@@ -13,8 +13,8 @@
     --border-3:  #2a2a2a;
     --text:      #e0e0e0;
     --text-2:    #aaa;
-    --text-3:    #7a7a7a;
-    --text-4:    #5a5a5a;
+    --text-3:    #bdbdbd;
+    --text-4:    #ffffff;
     --text-5:    #4a4a4a;
     --accent:    #e8734a;
     --green:     #4ae8a3;
@@ -38,8 +38,8 @@ body.light-mode {
     --border-3:  #bcc8d8;
     --text:      #1f2937;
     --text-2:    #374151;
-    --text-3:    #5b6472;
-    --text-4:    #7a8596;
+    --text-3:    #484848;
+    --text-4:    #000000;
     --text-5:    #98a2b3;
     --accent:    #d9653f;
     --green:     #2fb879;
@@ -66,7 +66,7 @@ body {
 
 /* ── Typography helpers ── */
 .section-label {
-    font-size: 9px;
+    font-size: 12px;
     font-weight: 800;
     letter-spacing: .15em;
     text-transform: uppercase;
