@@ -39,7 +39,29 @@ if ($reason === 'idle') {
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0a0a0a;color:#e0e0e0;font-family:'IBM Plex Mono','Courier New',monospace;min-height:100vh;display:flex;align-items:center;justify-content:center}
-.card{background:#111;border:1px solid #1e1e1e;border-radius:12px;padding:40px;width:360px;max-width:calc(100vw - 32px);display:flex;flex-direction:column;gap:24px}
+.card{
+    background:#111;border:1px solid #1e1e1e;
+    border-radius:12px;
+    padding:40px;width:360px;
+    max-width:calc(100vw - 32px);
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+    position:relative
+}
+.theme-toggle{
+    position:absolute;
+    top:18px;
+    right:18px;
+    background:#111;
+    border:1px solid #333;
+    color:#e0e0e0;
+    border-radius:7px;
+    padding:9px 13px;
+    cursor:pointer;
+    font-family:inherit;
+    font-size:11px;
+}
 @media(max-width:420px){.card{padding:28px 20px;border-radius:10px}}
 .logo{text-align:center}
 .logo-mark{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#e0e0e0;letter-spacing:-.01em}
@@ -54,10 +76,52 @@ input:focus{border-color:#e8734a}
 .error{background:#e84a4a18;border:1px solid #e84a4a66;border-radius:6px;color:#f07070;font-size:11px;padding:9px 12px;text-align:center}
 .hint{background:#ffffff08;border:1px solid #2a2a2a;border-radius:6px;font-size:10px;color:#888;padding:10px 12px;line-height:1.8}
 .hint strong{color:#bbb;font-weight:600}
+
+body.light-mode{
+    background:#eef2f7;
+    color:#1f2937;
+}
+
+body.light-mode .card{
+    background:#ffffff;
+    border-color:#d6dde8;
+}
+
+body.light-mode .logo-mark{
+    color:#1f2937;
+}
+
+body.light-mode .logo-sub,
+body.light-mode label{
+    color:#64748b;
+}
+
+body.light-mode input{
+    background:#ffffff;
+    border-color:#cbd5e1;
+    color:#1f2937;
+}
+
+body.light-mode input::placeholder{
+    color:#94a3b8;
+}
+
+body.light-mode .theme-toggle{
+    background:#ffffff;
+    border:1px solid #cbd5e1;
+    color:#1f2937;
+}
 </style>
 </head>
 <body>
 <div class="card">
+
+<button type="button" id="themeToggle"
+    class="theme-toggle"
+    style="position:absolute;top:16px;right:16px;">
+    Light Mode
+</button>
+
     <div class="logo">
         <div class="logo-mark"><span>▸</span> Agile Board</div>
         <div class="logo-sub">Demo</div>
@@ -90,5 +154,22 @@ input:focus{border-color:#e8734a}
         New here? <a href="<?= htmlspecialchars(appPath('register.php')) ?>" style="color:#e8734a;text-decoration:none">Create an account →</a>
     </div>
 </div>
+<script>
+const toggle = document.getElementById('themeToggle');
+
+const saved = localStorage.getItem('theme') || 'dark';
+
+if (saved === 'light') {
+    document.body.classList.add('light-mode');
+    toggle.textContent = 'Dark Mode';
+}
+
+toggle.addEventListener('click', () => {
+    const isLight = document.body.classList.toggle('light-mode');
+
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    toggle.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+});
+</script>
 </body>
 </html>

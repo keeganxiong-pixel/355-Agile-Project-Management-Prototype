@@ -215,3 +215,5 @@ function refreshSessionUser(): void {
         }
     } catch (Exception $e) {}
 }
+
+

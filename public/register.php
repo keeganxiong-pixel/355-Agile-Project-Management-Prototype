@@ -112,6 +112,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 22px;
+    position: relative; 
 }
 .logo { text-align: center; }
 .logo-mark { font-family: var(--font-sans); font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
@@ -225,10 +226,66 @@ input[name="color"][type="radio"]:checked ~ .swatch-label {
     align-items: center;
 }
 .avatar-row input { flex: 1; }
+
+/* LIGHT MODE */
+body.light-mode {
+    background: #eef2f7;
+    color: #1f2937;
+}
+
+body.light-mode .card {
+    background: #ffffff;
+    border-color: #d6dde8;
+}
+
+body.light-mode .logo-mark {
+    color: #1f2937;
+}
+
+body.light-mode .logo-sub,
+body.light-mode label {
+    color: #64748b;
+}
+
+body.light-mode input {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #1f2937;
+}
+
+body.light-mode input::placeholder {
+    color: #94a3b8;
+}
+
+body.light-mode .theme-toggle {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #1f2937;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: #111;
+    border: 1px solid #333;
+    color: #e0e0e0;
+    border-radius: 7px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+}
+
 </style>
 </head>
 <body>
 <div class="card">
+    <button type="button" id="themeToggle" class="theme-toggle">
+        Light Mode
+    </button>
+
     <div class="logo">
         <div class="logo-mark"><span>▸</span> Agile Board</div>
         <div class="logo-sub">Create Account</div>
@@ -327,5 +384,26 @@ avatarInput.addEventListener('input', updatePreview);
 colorRadios.forEach(r => r.addEventListener('change', updatePreview));
 updatePreview();
 </script>
+
+<script>
+const toggle = document.getElementById('themeToggle');
+
+if (toggle) {
+    const saved = localStorage.getItem('theme') || 'dark';
+
+    if (saved === 'light') {
+        document.body.classList.add('light-mode');
+        toggle.textContent = 'Dark Mode';
+    }
+
+    toggle.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-mode');
+
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        toggle.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    });
+}
+</script>
+
 </body>
 </html>
