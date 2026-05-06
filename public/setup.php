@@ -149,13 +149,13 @@ $db->exec("UPDATE users SET role = 'member'   WHERE username = 'rachel' AND role
 $count = (int) $db->query("SELECT COUNT(*) FROM tasks")->fetchColumn();
 if ($count === 0) {
     $tasks = [
-        [$defaultBoardId, 'Design system audit',     'Review all components for consistency with the new design tokens.',  'todo',       1, 'high', 'design,qa',           3],
-        [$defaultBoardId, 'Auth middleware refactor', 'Extract auth logic into a dedicated middleware layer.',              'inprogress', 2, 'crit', 'backend,security',    8],
-        [$defaultBoardId, 'Write API docs',           'Document all public endpoints using OpenAPI 3.1.',                  'inprogress', 3, 'mid',  'docs',                5],
-        [$defaultBoardId, 'Set up CI pipeline',       'Configure GitHub Actions for lint, test, and deploy.',              'done',       4, 'high', 'devops',              5],
-        [$defaultBoardId, 'Mobile responsiveness',    'Fix layout breakpoints for screens below 768px.',                   'todo',    null, 'mid',  'frontend',            3],
-        [$defaultBoardId, 'Database indexing',        'Add missing indexes on the tasks and users tables.',                'todo',       5, 'low',  'backend,performance', 2],
-        [$defaultBoardId, 'Notification system',      'Build real-time notification dropdown with read/unread states.',    'done',       6, 'crit', 'frontend,realtime',   13],
+        [$defaultBoardId, 'Core auth flow stabilized', 'Login, logout, idle timeout, and protected page access are all wired up and working together.', 'done', 1, 'crit', 'auth,backend', 8],
+        [$defaultBoardId, 'Board and task CRUD shipped', 'Users can create, edit, move, and delete tasks, with board switching and persistence in place.', 'done', 2, 'high', 'frontend,backend', 8],
+        [$defaultBoardId, 'Comments and attachments finished', 'Task discussions and file uploads are available from the task detail sidebar.', 'done', 3, 'high', 'collaboration,files', 5],
+        [$defaultBoardId, 'Dynamic columns complete', 'Boards now load their workflow columns from the database instead of relying on hardcoded lanes.', 'done', 4, 'high', 'boards,database', 5],
+        [$defaultBoardId, 'Theme behavior cleanup', 'Keep the top-level dark/light toggle synced with the selected saved theme across login, board, settings, and admin screens.', 'inprogress', 5, 'mid', 'ui,theme', 3],
+        [$defaultBoardId, 'Settings navigation regression', 'Verify navigating between the board and settings does not trigger logout beacon side effects.', 'inprogress', 6, 'crit', 'auth,bugfix', 5],
+        [$defaultBoardId, 'Seed data refresh', 'Replace the old placeholder demo tasks with setup data that matches the current prototype status.', 'done', 7, 'low', 'setup,docs', 2],
     ];
     $tStmt = $db->prepare(
         "INSERT INTO tasks (board_id, title, description, status, assigned_to, priority, tags, story_points) VALUES (?,?,?,?,?,?,?,?)"

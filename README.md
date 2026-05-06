@@ -177,7 +177,7 @@ agile-board/
 │   ├── index.php                ← main Kanban board (requires login)
 │   ├── login.php                ← login form; idle/expired session notices
 │   ├── logout.php               ← destroys session, redirects to login
-│   ├── logout_beacon.php        ← navigator.sendBeacon() target for tab-close logout
+│   ├── logout_beacon.php        ← logout endpoint used by idle-timeout beacon
 │   ├── register.php             ← self-service account creation
 │   ├── settings.php             ← account settings (profile, password, theme)
 │   ├── admin.php                ← user management panel (admin/sysadmin only)
@@ -275,7 +275,7 @@ The `sysadmin` role is enforced by username in `src/auth.php`, so that account s
 - Sessions use `httponly` cookies that expire when the browser closes (`lifetime = 0`).
 - Idle timeout: 30 minutes of inactivity triggers automatic logout.
 - Absolute timeout: sessions expire after 2 hours regardless of activity.
-- On tab/window close, `navigator.sendBeacon()` fires `logout_beacon.php` to clean up the server session (best-effort; the idle timeout is the authoritative guard).
+- On idle timeout, the client sends a beacon to `logout_beacon.php` before redirecting back to login so the server session is cleared immediately.
 - `session_regenerate_id(true)` is called on every successful login.
 
 > **Note:** The session cookie's `secure` flag is set to `false` by default so the

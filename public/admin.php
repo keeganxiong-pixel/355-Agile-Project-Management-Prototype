@@ -26,7 +26,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               ? $_POST['role'] : 'member';
 
         // Cannot demote or change sysadmin
-        $target = $db->prepare("SELECT username FROM users WHERE id = ?")->execute([$uid]) && false;
         $tStmt  = $db->prepare("SELECT username FROM users WHERE id = ?");
         $tStmt->execute([$uid]);
         $targetUsername = $tStmt->fetchColumn();
@@ -95,7 +94,7 @@ $tcMap     = array_column($taskCnts, 'cnt', 'board_id');
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= htmlspecialchars(appPath('assets/css/style.css')) ?>">
-<script>(function(){const t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.add('light-mode');if(t==='midnight')document.documentElement.classList.add('midnight-mode');if(t==='forest')document.documentElement.classList.add('forest-mode');if(t==='rose')document.documentElement.classList.add('rose-mode');})();</script>
+<script>document.addEventListener('DOMContentLoaded',function(){const t=localStorage.getItem('theme')||localStorage.getItem('lastDarkTheme')||'dark';document.body.classList.remove('light-mode','midnight-mode','forest-mode','rose-mode');if(t==='light')document.body.classList.add('light-mode');if(t==='midnight')document.body.classList.add('midnight-mode');if(t==='forest')document.body.classList.add('forest-mode');if(t==='rose')document.body.classList.add('rose-mode');});</script>
 <style>
 .admin-wrap{max-width:960px;margin:0 auto;padding:32px 24px}
 .admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;border-bottom:1px solid var(--border);padding-bottom:20px}

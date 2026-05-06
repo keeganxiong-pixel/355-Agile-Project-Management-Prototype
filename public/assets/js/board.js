@@ -61,36 +61,6 @@ const board = (() => {
         resetIdleTimer();
     }
 
-    function bindBeaconLogout() {
-        // Only send beacon on true tab/window close, not on internal navigation.
-        // We detect internal navigation by setting a flag on any same-origin link click.
-        let navigatingInternally = false;
-
-        document.addEventListener('click', (e) => {
-            const a = e.target.closest('a[href]');
-            if (!a) return;
-            try {
-                const url = new URL(a.href, window.location.origin);
-                if (url.origin === window.location.origin) {
-                    navigatingInternally = true;
-                }
-            } catch (_) {}
-        });
-
-        // Also flag form submissions (logout form, settings form, etc.)
-        document.addEventListener('submit', () => { navigatingInternally = true; });
-
-        const sendBeacon = () => {
-            if (!navigatingInternally) {
-                navigator.sendBeacon(`${APP_BASE}/logout_beacon.php`);
-            }
-            navigatingInternally = false;
-        };
-
-        window.addEventListener('pagehide', sendBeacon);
-        window.addEventListener('beforeunload', sendBeacon);
-    }
-
     function bindNavigationLinks() {
         document.querySelectorAll('.user-nav-link').forEach((link) => {
             link.addEventListener('click', (e) => {
@@ -121,7 +91,6 @@ const board = (() => {
         bindBoardActions();
         bindNavigationLinks();
         bindIdleReset();
-        bindBeaconLogout();
 
         const newTaskBtn = document.getElementById('new-task-btn');
         if (newTaskBtn) {
@@ -1586,6 +1555,23 @@ async function deleteComment(commentId) {
     // ── Theme ──────────────────────────────────────────────────────────────────
     const ALL_THEME_CLASSES = ['light-mode','midnight-mode','forest-mode','rose-mode'];
 
+    function rememberTheme(id) {
+        localStorage.setItem('theme', id);
+        if (id !== 'light') {
+            localStorage.setItem('lastDarkTheme', id);
+        }
+    }
+
+    function getSavedTheme() {
+        return localStorage.getItem('theme') || localStorage.getItem('lastDarkTheme') || 'dark';
+    }
+
+    function updateThemeToggleLabel(id) {
+        const toggle = document.getElementById('theme-toggle');
+        if (!toggle) return;
+        toggle.textContent = id === 'light' ? 'Dark Mode' : 'Light Mode';
+    }
+
     function applyTheme(id) {
         const body = document.body;
         body.classList.remove(...ALL_THEME_CLASSES);
@@ -1593,16 +1579,12 @@ async function deleteComment(commentId) {
         if (id === 'midnight') body.classList.add('midnight-mode');
         if (id === 'forest')   body.classList.add('forest-mode');
         if (id === 'rose')     body.classList.add('rose-mode');
-        localStorage.setItem('theme', id);
+        rememberTheme(id);
+        updateThemeToggleLabel(id);
     }
 
     function applySavedTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        applyTheme(savedTheme);
-        const toggle = document.getElementById('theme-toggle');
-        if (toggle) {
-            toggle.textContent = savedTheme === 'dark' ? 'Light Mode' : 'Dark Mode';
-        }
+        applyTheme(getSavedTheme());
     }
 
     function bindThemeToggle() {
@@ -1610,10 +1592,11 @@ async function deleteComment(commentId) {
         if (!toggle) return;
 
         toggle.addEventListener('click', () => {
-            const current = localStorage.getItem('theme') || 'dark';
-            const next = current === 'dark' ? 'light' : 'dark';
+            const current = getSavedTheme();
+            const next = current === 'light'
+                ? (localStorage.getItem('lastDarkTheme') || 'dark')
+                : 'light';
             applyTheme(next);
-            toggle.textContent = next === 'dark' ? 'Light Mode' : 'Dark Mode';
         });
     }
 

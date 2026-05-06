@@ -389,18 +389,27 @@ updatePreview();
 const toggle = document.getElementById('themeToggle');
 
 if (toggle) {
-    const saved = localStorage.getItem('theme') || 'dark';
-
-    if (saved === 'light') {
-        document.body.classList.add('light-mode');
-        toggle.textContent = 'Dark Mode';
+    function getSavedTheme() {
+        return localStorage.getItem('theme') || localStorage.getItem('lastDarkTheme') || 'dark';
     }
 
-    toggle.addEventListener('click', () => {
-        const isLight = document.body.classList.toggle('light-mode');
+    function applyTheme(id) {
+        document.body.classList.toggle('light-mode', id === 'light');
+        localStorage.setItem('theme', id);
+        if (id !== 'light') {
+            localStorage.setItem('lastDarkTheme', id);
+        }
+        toggle.textContent = id === 'light' ? 'Dark Mode' : 'Light Mode';
+    }
 
-        localStorage.setItem('theme', isLight ? 'light' : 'dark');
-        toggle.textContent = isLight ? 'Dark Mode' : 'Light Mode';
+    applyTheme(getSavedTheme());
+
+    toggle.addEventListener('click', () => {
+        const current = getSavedTheme();
+        const next = current === 'light'
+            ? (localStorage.getItem('lastDarkTheme') || 'dark')
+            : 'light';
+        applyTheme(next);
     });
 }
 </script>

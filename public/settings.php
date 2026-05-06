@@ -159,14 +159,6 @@ $user = $stmt->fetch(PDO::FETCH_ASSOC);
 .theme-swatch-row { display: flex; gap: 4px; justify-content: center; margin-bottom: 8px; }
 .theme-swatch { width: 14px; height: 14px; border-radius: 50%; }
 
-/* Theme color palettes (preview swatches) */
-.theme-palettes {
-    dark:     ['#0a0a0a','#e8734a','#4ae8a3'],
-    light:    ['#eef2f7','#d9653f','#2fb879'],
-    midnight: ['#050914','#5b8dee','#6ee7b7'],
-    forest:   ['#0c120c','#7bc47f','#a3e84a'],
-    rose:     ['#130a0d','#e84a9e','#e8734a'],
-}
 @media (max-width: 600px) {
     .settings-wrap { padding: 20px 14px; }
     .settings-card { padding: 18px 14px !important; }
@@ -303,8 +295,19 @@ for (const [id, colors] of Object.entries(PALETTES)) {
     el.innerHTML = colors.map(c => `<div class="theme-swatch" style="background:${c}"></div>`).join('');
 }
 
+function rememberTheme(id) {
+    localStorage.setItem('theme', id);
+    if (id !== 'light') {
+        localStorage.setItem('lastDarkTheme', id);
+    }
+}
+
+function getSavedTheme() {
+    return localStorage.getItem('theme') || localStorage.getItem('lastDarkTheme') || 'dark';
+}
+
 // Load saved theme
-const savedTheme = localStorage.getItem('theme') || 'dark';
+const savedTheme = getSavedTheme();
 applyTheme(savedTheme);
 
 // Mark selected card
@@ -330,7 +333,7 @@ function applyTheme(id) {
     const body = document.body;
     // Remove all theme classes
     body.classList.remove('light-mode', 'midnight-mode', 'forest-mode', 'rose-mode');
-    localStorage.setItem('theme', id);
+    rememberTheme(id);
     if (id === 'light')    body.classList.add('light-mode');
     if (id === 'midnight') body.classList.add('midnight-mode');
     if (id === 'forest')   body.classList.add('forest-mode');
